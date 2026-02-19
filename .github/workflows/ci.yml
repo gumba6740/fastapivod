@@ -16,8 +16,7 @@ jobs:
         with:
           python-version: "3.13"
 
-      - name: Configure Poetry to use Python 3.13
-        run: poetry env use python3.13
+
 
       - name: Install Poetry
         run: |
@@ -48,12 +47,11 @@ jobs:
 
       - name: Setup python environment
         id: setup-python
-        uses: actions/checkout@v2
+        uses: actions/setup-python@v2
         with:
           python-version: "3.13"
 
-      - name: Configure Poetry to use Python 3.13
-        run: poetry env use python3.13
+
 
       - name: Install Poetry
         run: |
