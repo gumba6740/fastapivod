@@ -21,7 +21,7 @@ jobs:
           curl -sSL https://install.python-poetry.org | python3 - --version 1.8.5
 
       - name: Register Poetry bin
-        run: echo "${HOME)/.local/bin/" >> %GITHUB_PATH
+        run: echo "${HOME}/.local/bin/" >> %GITHUB_PATH
 
       - name: Install dependencies
         run: poetry install --no-root
