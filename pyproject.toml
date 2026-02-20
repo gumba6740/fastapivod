@@ -10,6 +10,8 @@ python = "^3.13"
 pydantic = "^2.12.5"
 orjson = "3.10.12"
 annotated = "^0.0.2"
+fastapi = "^0.129.0"
+uvicorn = "^0.41.0"
 
 
 [tool.poetry.group.dev.dependencies]
