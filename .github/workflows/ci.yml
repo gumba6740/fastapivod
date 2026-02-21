@@ -103,20 +103,20 @@ jobs:
         run: |
           curl --proto '=https' --tlsv1.2 -sSf https://get.gel.run | sh -s -- -y
 
-      - name: Add Gel to PATH
-        # 이 단계가 끝나야 다음 단계부터 'gel' 커맨드를 인식합니다.
-        run: |
-          echo "$HOME/.gel/bin" >> $GITHUB_PATH
-
       - name: Setup Gel Instance
-        # 여기서 'gel' 명령어를 찾지 못한다면,
-        # 안전하게 전체 경로를 직접 지정하거나 단계가 잘 나뉘었는지 확인해야 합니다.
         run: |
-          # 현재 세션에도 PATH를 강제로 적용 (안전장치)
+          # 캐시 여부와 상관없이 PATH를 현재 세션에 추가
           export PATH="$HOME/.gel/bin:$PATH"
           
+          # 인스턴스 생성 및 프로젝트 연결
           gel instance create test_instance --start-conf=auto
           gel project init --non-interactive --server-instance test_instance
+
+      - name: Run tests
+        run: |
+          # 다음 단계에서도 gel을 쓸 수 있게 PATH 등록 (보험)
+          echo "$HOME/.gel/bin" >> $GITHUB_PATH
+          poetry run coverage run -m pytest .
 
       - name: Run tests
         run: |
