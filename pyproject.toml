@@ -15,6 +15,7 @@ uvicorn = "^0.41.0"
 gel = "^3.1.0"
 cast = "^0.1.1"
 asyncio = "^4.0.0"
+httpx = "0.28.1"
 
 
 [tool.poetry.group.dev.dependencies]
