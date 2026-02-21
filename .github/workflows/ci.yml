@@ -105,19 +105,17 @@ jobs:
 
       - name: Setup Gel Instance
         run: |
-          # 1. Poetry 환경의 bin 폴더를 PATH에 확실히 추가
-          export PATH="/home/runner/.cache/pypoetry/virtualenvs/pythonproject-7JZUfA1B-py3.13/bin:$PATH"
+          # 1. 인스턴스 생성 (이미 있으면 넘어가도록 설정)
+          poetry run gel instance create test_instance --tls-security=insecure || echo "Instance already exists"
           
-          # 2. 명령어 위치 확인
-          GEL_PATH=$(which gel)
-          echo "Using Gel at: $GEL_PATH"
+          # 2. 프로젝트 초기화 및 연결 (--link 플래그가 핵심!)
+          poetry run gel project init --non-interactive --server-instance test_instance --link
 
-          # 3. 옵션 수정: --security -> --tls-security
-          # 인스턴스 생성
-          $GEL_PATH instance create test_instance --start-conf=auto --tls-security=insecure
-          
-          # 프로젝트 초기화
-          $GEL_PATH project init --non-interactive --server-instance test_instance
+      - name: Run tests
+        run: |
+          # 3. 테스트 실행 및 리포트 출력
+          poetry run coverage run -m pytest .
+          poetry run coverage report -m
       
 
       - name: Run tests
