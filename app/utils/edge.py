@@ -1,5 +1,6 @@
-import gel
 import os
+
+import gel
 
 dsn = os.getenv("GEL_DSN")
 
