@@ -105,10 +105,7 @@ jobs:
 
       - name: Setup Gel Instance
         run: |
-          # 1. 인스턴스 생성 (이미 있으면 넘어가도록 설정)
           poetry run gel instance create test_instance --tls-security=insecure || echo "Instance already exists"
-          
-          # 2. 프로젝트 초기화 및 연결 (--link 플래그가 핵심!)
           poetry run gel project init --non-interactive --server-instance test_instance --link
 
       - name: Run tests
