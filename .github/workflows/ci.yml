@@ -105,17 +105,23 @@ jobs:
 
       - name: Setup Gel Instance
         run: |
-          # 1. 경로 강제 지정 (가장 보수적인 설정)
-          export GEL_BIN="$HOME/.gel/bin"
-          export PATH="$GEL_BIN:$PATH"
+          # 1. 예상되는 모든 경로를 PATH에 등록
+          export PATH="$HOME/.gel/bin:$HOME/.local/bin:$PATH"
 
-          # 2. 진단: 파일이 실제로 존재하는지 확인
-          echo "Checking Gel binary at: $GEL_BIN"
-          ls -l $GEL_BIN/gel || echo "CRITICAL: Gel binary not found!"
+          # 2. Gel 위치 강제 추적
+          GEL_PATH=$(which gel || find $HOME -name gel -type f -executable | head -n 1)
+          
+          if [ -z "$GEL_PATH" ]; then
+            echo "CRITICAL: Gel binary STILL not found anywhere!"
+            exit 1
+          fi
+          
+          echo "Success! Gel found at: $GEL_PATH"
 
-          # 3. 실행 (절대 경로를 직접 사용해서 PATH 문제를 원천 차단)
-          $GEL_BIN/gel instance create test_instance --start-conf=auto --security=insecure
-          $GEL_BIN/gel project init --non-interactive --server-instance test_instance
+          # 3. 찾은 절대 경로로 실행
+          $GEL_PATH instance create test_instance --start-conf=auto --security=insecure
+          $GEL_PATH project init --non-interactive --server-instance test_instance      
+      
 
       - name: Run tests
         run: |
