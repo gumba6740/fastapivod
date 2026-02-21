@@ -92,7 +92,7 @@ jobs:
         run: poetry install --no-root
 
       - name: Setup Gel
-        uses: gel-data/setup-gel@v1
+        uses: gel-data/setup-cli@v1
         with:
           instance-name: test_instance
 
