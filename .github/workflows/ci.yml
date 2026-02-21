@@ -91,6 +91,15 @@ jobs:
         if: steps.cache-venv.outputs.cache-hit != 'true'
         run: poetry install --no-root
 
+      - name: Setup Gel
+        uses: gel-data/setup-gel@v1
+        with:
+          instance-name: test_instance
+
+      - name: Initialize Gel Project
+        run: |
+          gel project init --non-interactive --server-instance test_instance
+
       - name: Run tests
         run: |
           poetry run coverage run -m pytest .
