@@ -105,29 +105,20 @@ jobs:
 
       - name: Setup Gel Instance
         run: |
-          # 1. 예상되는 모든 경로를 PATH에 등록
-          export PATH="$HOME/.gel/bin:$HOME/.local/bin:$PATH"
-
-          # 2. Gel 위치 강제 추적
-          GEL_PATH=$(which gel || find $HOME -name gel -type f -executable | head -n 1)
+          # 1. Poetry 환경의 bin 폴더를 PATH에 확실히 추가
+          export PATH="/home/runner/.cache/pypoetry/virtualenvs/pythonproject-7JZUfA1B-py3.13/bin:$PATH"
           
-          if [ -z "$GEL_PATH" ]; then
-            echo "CRITICAL: Gel binary STILL not found anywhere!"
-            exit 1
-          fi
-          
-          echo "Success! Gel found at: $GEL_PATH"
+          # 2. 명령어 위치 확인
+          GEL_PATH=$(which gel)
+          echo "Using Gel at: $GEL_PATH"
 
-          # 3. 찾은 절대 경로로 실행
-          $GEL_PATH instance create test_instance --start-conf=auto --security=insecure
-          $GEL_PATH project init --non-interactive --server-instance test_instance      
+          # 3. 옵션 수정: --security -> --tls-security
+          # 인스턴스 생성
+          $GEL_PATH instance create test_instance --start-conf=auto --tls-security=insecure
+          
+          # 프로젝트 초기화
+          $GEL_PATH project init --non-interactive --server-instance test_instance
       
-
-      - name: Run tests
-        run: |
-          # 다음 단계에서도 gel을 쓸 수 있게 PATH 등록 (보험)
-          echo "$HOME/.gel/bin" >> $GITHUB_PATH
-          poetry run coverage run -m pytest .
 
       - name: Run tests
         run: |
