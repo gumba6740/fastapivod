@@ -12,6 +12,9 @@ orjson = "3.10.12"
 annotated = "^0.0.2"
 fastapi = "^0.129.0"
 uvicorn = "^0.41.0"
+gel = "^3.1.0"
+cast = "^0.1.1"
+asyncio = "^4.0.0"
 
 
 [tool.poetry.group.dev.dependencies]
