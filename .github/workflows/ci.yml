@@ -105,12 +105,17 @@ jobs:
 
       - name: Setup Gel Instance
         run: |
-          # 캐시 여부와 상관없이 PATH를 현재 세션에 추가
-          export PATH="$HOME/.gel/bin:$PATH"
-          
-          # 인스턴스 생성 및 프로젝트 연결
-          gel instance create test_instance --start-conf=auto
-          gel project init --non-interactive --server-instance test_instance
+          # 1. 경로 강제 지정 (가장 보수적인 설정)
+          export GEL_BIN="$HOME/.gel/bin"
+          export PATH="$GEL_BIN:$PATH"
+
+          # 2. 진단: 파일이 실제로 존재하는지 확인
+          echo "Checking Gel binary at: $GEL_BIN"
+          ls -l $GEL_BIN/gel || echo "CRITICAL: Gel binary not found!"
+
+          # 3. 실행 (절대 경로를 직접 사용해서 PATH 문제를 원천 차단)
+          $GEL_BIN/gel instance create test_instance --start-conf=auto --security=insecure
+          $GEL_BIN/gel project init --non-interactive --server-instance test_instance
 
       - name: Run tests
         run: |
