@@ -91,13 +91,30 @@ jobs:
         if: steps.cache-venv.outputs.cache-hit != 'true'
         run: poetry install --no-root
 
-      - name: Setup Gel
-        uses: geldata/gel-cli@v7
+      - name: Cache Gel CLI
+        id: cache-gel
+        uses: actions/cache@v4
         with:
-          instance-name: test_instance
+          # Gel CLI가 설치되는 경로를 캐싱합니다.
+          path: ~/.gel/bin
+          # 캐시 키는 운영체제 이름과 'gel-cli'라는 문구로 설정합니다.
+          key: ${{ runner.os }}-gel-cli
 
-      - name: Initialize Gel Project
+      - name: Install Gel CLI
+        # 캐시가 히트(hit)되지 않았을 때만 설치를 진행합니다.
+        if: steps.cache-gel.outputs.cache-hit != 'true'
         run: |
+          curl --proto '=https' --tlsv1.2 -sSf https://get.gel.run | sh -s -- -y
+
+      - name: Add Gel to PATH
+        # 캐시 여부와 상관없이 PATH에는 항상 추가해줘야 명령어를 인식합니다.
+        run: |
+          echo "$HOME/.gel/bin" >> $GITHUB_PATH
+
+      - name: Setup Gel Instance
+        run: |
+          # 인스턴스 생성은 매번 깨끗한 DB 상태를 유지하기 위해 캐시하지 않는 것이 좋습니다.
+          gel instance create test_instance --start-conf=auto
           gel project init --non-interactive --server-instance test_instance
 
       - name: Run tests
