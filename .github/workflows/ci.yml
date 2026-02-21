@@ -120,13 +120,6 @@ jobs:
 
       - name: Run tests
         run: |
-          # 3. 테스트 실행 및 리포트 출력
-          poetry run coverage run -m pytest .
-          poetry run coverage report -m
-      
-
-      - name: Run tests
-        run: |
           poetry run coverage run -m pytest .
           poetry run coverage report -m
       
