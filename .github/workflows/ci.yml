@@ -92,7 +92,7 @@ jobs:
         run: poetry install --no-root
 
       - name: Setup Gel
-        uses: geldata/gel-cli@v1
+        uses: geldata/gel-cli@v7
         with:
           instance-name: test_instance
 
