@@ -94,24 +94,6 @@ jobs:
       - name: Setup Gel
         uses: geldata/setup-gel@v1
 
-
-#      - name: Cache Gel CLI
-#        id: cache-gel
-#        uses: actions/cache@v4
-#        with:
-#          path: ~/.gel/bin
-#          key: ${{ runner.os }}-gel-cli
-#
-#      - name: Install Gel CLI
-#        if: steps.cache-gel.outputs.cache-hit != 'true'
-#        run: |
-#          curl --proto '=https' --tlsv1.2 -sSf https://get.gel.run | sh -s -- -y
-#
-#      - name: Setup Gel Instance
-#        run: |
-#          poetry run gel instance create test_instance --tls-security=insecure || echo "Instance already exists"
-#          poetry run gel project init --non-interactive --server-instance test_instance --link
-
       - name: Run tests
         run: |
           poetry run coverage run -m pytest .
