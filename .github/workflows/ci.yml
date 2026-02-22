@@ -91,33 +91,26 @@ jobs:
         if: steps.cache-venv.outputs.cache-hit != 'true'
         run: poetry install --no-root
 
-      - name: Cache Gel CLI
-        id: cache-gel
-        uses: actions/cache@v4
-        with:
-          path: ~/.gel/bin
-          key: ${{ runner.os }}-gel-cli
+      - name: Setup Gel
+        uses: geldata/setup-gel@v1
 
-      - name: Install Gel CLI
-        if: steps.cache-gel.outputs.cache-hit != 'true'
-        run: |
-          curl --proto '=https' --tlsv1.2 -sSf https://get.gel.run | sh -s -- -y
 
-      - name: Cache Gel Server Binaries
-        uses: actions/cache@v4
-        with:
-          # 경로를 ~/.local/share/gel 로 변경합니다.
-          path: |
-            ~/.local/share/gel
-            ~/.cache/gel
-          key: ${{ runner.os }}-gel-server-${{ hashFiles('gel.toml') }}
-          restore-keys: |
-            ${{ runner.os }}-gel-server-
-
-      - name: Setup Gel Instance
-        run: |
-          poetry run gel instance create test_instance --tls-security=insecure || echo "Instance already exists"
-          poetry run gel project init --non-interactive --server-instance test_instance --link
+#      - name: Cache Gel CLI
+#        id: cache-gel
+#        uses: actions/cache@v4
+#        with:
+#          path: ~/.gel/bin
+#          key: ${{ runner.os }}-gel-cli
+#
+#      - name: Install Gel CLI
+#        if: steps.cache-gel.outputs.cache-hit != 'true'
+#        run: |
+#          curl --proto '=https' --tlsv1.2 -sSf https://get.gel.run | sh -s -- -y
+#
+#      - name: Setup Gel Instance
+#        run: |
+#          poetry run gel instance create test_instance --tls-security=insecure || echo "Instance already exists"
+#          poetry run gel project init --non-interactive --server-instance test_instance --link
 
       - name: Run tests
         run: |
