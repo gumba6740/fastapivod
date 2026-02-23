@@ -1,9 +1,14 @@
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
 from tortoise import Model, fields
 
 from app.tortoise_models.base_model import BaseModel
 from app.tortoise_models.meeting import MeetingModel
+
+if TYPE_CHECKING:
+    from app.tortoise_models.participant_date import ParticipantDateModel
 
 
 class ParticipantModel(BaseModel, Model):
@@ -14,8 +19,10 @@ class ParticipantModel(BaseModel, Model):
         db_constraint=False,
         on_delete=fields.CASCADE,
         to_field="url_code",
+        index=True,
     )
     meeting_id: str
+    participant_dates: fields.ReverseRelation["ParticipantDateModel"]
 
     class Meta:
         table = "Participants"
